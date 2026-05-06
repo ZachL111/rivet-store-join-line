@@ -1,0 +1,73 @@
+{
+  "repo": "rivet-store-join-line",
+  "language": "Swift",
+  "category": "Databases",
+  "goal": "Develop a Swift command-oriented project for join scenarios with append-only fixtures, checkpoint recovery checks, and single-node deterministic mode.",
+  "review_model": {
+    "terms": [
+      "index fit",
+      "join width",
+      "constraint risk",
+      "plan drift"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "index fit",
+      "signal": 73,
+      "slack": 36,
+      "drag": 17,
+      "confidence": 57,
+      "score": 188,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "join width",
+      "signal": 62,
+      "slack": 36,
+      "drag": 8,
+      "confidence": 60,
+      "score": 196,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "constraint risk",
+      "signal": 53,
+      "slack": 49,
+      "drag": 11,
+      "confidence": 73,
+      "score": 195,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "plan drift",
+      "signal": 65,
+      "slack": 32,
+      "drag": 30,
+      "confidence": 77,
+      "score": 149,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "index fit",
+      "signal": 89,
+      "slack": 31,
+      "drag": 18,
+      "confidence": 90,
+      "score": 245,
+      "lane": "ship"
+    }
+  ]
+}

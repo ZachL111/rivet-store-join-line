@@ -1,30 +1,29 @@
 # rivet-store-join-line
 
-`rivet-store-join-line` is a Swift project for Databases. It turns develop a Swift command-oriented project for join scenarios with append-only fixtures, checkpoint recovery checks, and single-node deterministic mode into a small local model with readable fixtures and a direct verification command.
+`rivet-store-join-line` keeps a focused Swift implementation around databases. The project goal is to develop a Swift command-oriented project for join scenarios with append-only fixtures, checkpoint recovery checks, and single-node deterministic mode.
 
-## Reading Rivet Store Join Line
+## Project Rationale
 
-Start with the README, then open `metadata/project.json` to check the constants behind the examples. After that, `fixtures/cases.csv` shows the compact path and `examples/extended_cases.csv` gives a wider look at the same rule.
+The project exists to keep a narrow engineering decision visible and testable. For this repo, that decision is how index fit and constraint risk should influence a review result.
 
-## Purpose
+## Rivet Store Join Line Review Notes
 
-The goal is to capture the core behavior in code and make the surrounding assumptions obvious. A reader should be able to run the verifier, open the fixtures, and understand why each decision was made.
+`stale` and `recovery` are the cases worth reading first. They show the optimistic and cautious ends of the fixture.
 
-## Fixture Notes
+## Feature Set
 
-`degraded` is the first example I would inspect because it lands on the `review` path with a score of -73. The broader file also keeps `degraded` at -73 and `surge` at 170, which gives the model a useful low-to-high spread.
+- `fixtures/domain_review.csv` adds cases for index fit and join width.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/rivet-store-join-walkthrough.md` walks through the case spread.
+- The Swift code includes a review path for `index fit` and `plan drift`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Design Sketch
+## Architecture
 
-The design is intentionally direct: parse or construct a signal, score it, classify it, and verify the expected branch. This makes the repository useful for studying databases behavior without needing a service or database unless the language project itself is SQL. The Swift project compiles a minimal command-line test harness against the local Windows SDK.
+The implementation keeps the scoring rule plain: reward signal and confidence, preserve slack, penalize drag, then classify the result into a review lane.
 
-## What It Does
-
-- Models schema shape with deterministic scoring and explicit review decisions.
-- Uses fixture data to keep query checks changes visible in code review.
-- Includes extended examples for fixture rows, including `surge` and `degraded`.
-- Documents constraint behavior tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
+The Swift code keeps the review rule close to the tests.
 
 ## Usage
 
@@ -32,37 +31,10 @@ The design is intentionally direct: parse or construct a signal, score it, class
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Test Command
 
-## Verification
+The same command runs the local verification path. The highest-scoring domain case is `stale` at 245, which lands in `ship`. The most cautious case is `recovery` at 149, which lands in `ship`.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
+## Next Improvements
 
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Files Worth Reading
-
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Next Directions
-
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add a short report command that prints the score breakdown for a single scenario.
-- Add malformed input fixtures so the failure path is as visible as the happy path.
-- Add one more databases fixture that focuses on a malformed or borderline input.
-
-## Limits
-
-The examples cover useful edges, not every edge. A larger version would add malformed-input tests, richer reports, and deeper domain parsers.
-
-## Setup
-
-Clone the repository, enter the directory, and run the verifier. No database server, cloud account, or token is required.
+The repository is intentionally scoped to local checks. I would expand it by adding adversarial fixtures before adding features.

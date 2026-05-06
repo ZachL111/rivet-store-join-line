@@ -10,5 +10,8 @@ struct TestRunner {
         let signalcase_3 = Signal(demand: 100, capacity: 83, latency: 15, risk: 8, weight: 10)
         precondition(Policy.score(signalcase_3) == 202)
         precondition(Policy.classify(signalcase_3) == "accept")
+        let domainReview = DomainReview(signal: 73, slack: 36, drag: 17, confidence: 57)
+        precondition(DomainReviewLens.score(domainReview) == 188)
+        precondition(DomainReviewLens.lane(domainReview) == "ship")
     }
 }
